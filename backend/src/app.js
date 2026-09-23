@@ -9,16 +9,7 @@ const app = express();
 app.use(helmet());
 app.use(
   cors({
-    origin: (origin, callback) => {
-      const allowed = [
-        process.env.CLIENT_URL,
-        'http://localhost:3000',
-        'http://localhost:5173',
-      ].filter(Boolean);
-      // Allow requests with no origin (Render health checks, curl, etc.)
-      if (!origin || allowed.includes(origin)) return callback(null, true);
-      callback(new Error(`CORS: origin ${origin} not allowed`));
-    },
+    origin: true,
     credentials: true,
   })
 );
