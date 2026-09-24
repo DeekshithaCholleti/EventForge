@@ -16,8 +16,8 @@ export const TicketCard = ({ ticket, registration, event, ticketType }) => {
       <div style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: '0.5rem' }}>{eventName}</div>
 
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <div className="qr-matrix">
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+        <div className="qr-matrix image-zoom">
+          <div className="zoom-target" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
             <QrCode size={72} style={{ color: '#312e81' }} />
             <span style={{ fontSize: '0.85rem', letterSpacing: '1px', color: '#312e81', fontFamily: 'monospace', fontWeight: 700 }}>{code}</span>
           </div>

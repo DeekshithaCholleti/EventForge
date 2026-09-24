@@ -39,12 +39,12 @@ const Login = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f0f4ff 0%, #e8efff 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(145deg, #DFF2EB 0%, #B9E5E8 48%, #f5faf9 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
       <div style={{ width: '100%', maxWidth: '420px' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.75rem' }}>
-            <Calendar size={36} style={{ color: '#4f46e5' }} />
-            <span style={{ fontFamily: 'Outfit', fontSize: '2rem', fontWeight: 800, color: '#0f172a' }}>EventForge</span>
+            <Calendar size={36} style={{ color: '#4A628A' }} />
+            <span style={{ fontFamily: 'Outfit', fontSize: '2rem', fontWeight: 800, color: '#23364d' }}>EventForge</span>
           </div>
           <p style={{ color: '#64748b' }}>Sign in to your account</p>
         </div>
@@ -98,7 +98,7 @@ const Login = () => {
             <button
               type="button"
               onClick={() => quickFill('admin@eventforge.dev', 'admin123')}
-              style={{ width: '100%', background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '0.5rem 0.75rem', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 500, textAlign: 'left', transition: 'all 0.15s' }}
+              style={{ width: '100%', background: '#f5faf9', border: '1px solid #d6e5e5', borderRadius: '6px', padding: '0.5rem 0.75rem', fontSize: '0.75rem', cursor: 'pointer', fontWeight: 500, textAlign: 'left', transition: 'all 0.15s' }}
             >
               🛡 Platform Admin
               <div style={{ color: '#94a3b8', fontSize: '0.68rem' }}>admin@eventforge.dev · admin123</div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import { Navbar } from './components/Navbar';
@@ -49,8 +49,25 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 };
 
 const App = () => {
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const updateScrollMotion = () => {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
+      setScrollProgress(progress);
+      document.documentElement.style.setProperty('--parallax-back', `${window.scrollY * -0.04}px`);
+      document.documentElement.style.setProperty('--parallax-front', `${window.scrollY * -0.1}px`);
+    };
+
+    updateScrollMotion();
+    window.addEventListener('scroll', updateScrollMotion, { passive: true });
+    return () => window.removeEventListener('scroll', updateScrollMotion);
+  }, []);
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div className="scroll-progress" style={{ width: `${scrollProgress}%` }} aria-hidden="true" />
       <Navbar />
       <main className="main-content" style={{ flex: 1 }}>
         <Routes>

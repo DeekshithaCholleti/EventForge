@@ -138,7 +138,7 @@ export const RegistrationModal = ({ event, ticketTypes = [], coupons = [], onClo
           </div>
 
           {/* Summary Box */}
-          <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem', border: '1px solid #e2e8f0' }}>
+          <div style={{ background: '#f5faf9', padding: '1rem', borderRadius: '8px', marginBottom: '1.5rem', border: '1px solid #d6e5e5' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem', fontSize: '0.9rem' }}>
               <span>Ticket Price:</span>
               <span>${originalPrice}</span>
@@ -151,7 +151,7 @@ export const RegistrationModal = ({ event, ticketTypes = [], coupons = [], onClo
             )}
             <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 700, fontSize: '1.1rem', paddingTop: '0.5rem', borderTop: '1px solid #cbd5e1' }}>
               <span>Total Amount:</span>
-              <span style={{ color: '#4f46e5' }}>${finalPrice}</span>
+              <span style={{ color: '#4A628A' }}>${finalPrice}</span>
             </div>
           </div>
 
@@ -159,8 +159,8 @@ export const RegistrationModal = ({ event, ticketTypes = [], coupons = [], onClo
             <button type="button" onClick={onClose} className="btn btn-secondary">
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
-              <ShieldCheck size={18} /> {loading ? 'Processing...' : 'Confirm Registration'}
+            <button type="submit" className={`btn btn-primary registration-submit ${loading ? 'is-loading' : ''}`} disabled={loading}>
+              <ShieldCheck size={18} /> {loading ? 'Sending...' : 'Confirm Registration'}
             </button>
           </div>
         </form>

@@ -34,12 +34,12 @@ const Register = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #f0f4ff 0%, #e8efff 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(145deg, #DFF2EB 0%, #B9E5E8 48%, #f5faf9 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
       <div style={{ width: '100%', maxWidth: '440px' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.5rem' }}>
-            <Calendar size={32} style={{ color: '#4f46e5' }} />
-            <span style={{ fontFamily: 'Outfit', fontSize: '1.75rem', fontWeight: 800, color: '#0f172a' }}>EventForge</span>
+            <Calendar size={32} style={{ color: '#4A628A' }} />
+            <span style={{ fontFamily: 'Outfit', fontSize: '1.75rem', fontWeight: 800, color: '#23364d' }}>EventForge</span>
           </div>
           <p style={{ color: '#64748b' }}>Create your account</p>
         </div>

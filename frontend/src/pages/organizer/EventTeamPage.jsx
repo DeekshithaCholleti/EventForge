@@ -11,10 +11,10 @@ const RESPONSIBILITIES = [
 ];
 
 const ROLE_COLORS = {
-  CHECK_IN: '#2563eb',
-  SESSION_SUPPORT: '#7c3aed',
+  CHECK_IN: '#7AB2D3',
+  SESSION_SUPPORT: '#B9E5E8',
   VENUE_OPERATION: '#b45309',
-  ATTENDEE_SUPPORT: '#0891b2',
+  ATTENDEE_SUPPORT: '#7AB2D3',
 };
 
 const Badge = ({ label, color = '#64748b' }) => (
@@ -232,16 +232,16 @@ const EventTeamPage = () => {
     } catch (err) { flash(err.message || 'Failed to remove', true); }
   };
 
-  const cardStyle = { background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1.5rem', marginBottom: '1.5rem' };
+  const cardStyle = { background: 'var(--cream)', borderRadius: '2px', border: '2px solid var(--dark)', padding: '1.5rem', marginBottom: '1.5rem', boxShadow: 'var(--shadow)' };
   const inputStyle = { width: '100%', padding: '0.6rem 0.9rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.9rem', boxSizing: 'border-box' };
-  const btnPrimary = { background: '#2563eb', color: 'white', border: 'none', borderRadius: '8px', padding: '0.6rem 1.2rem', cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '0.4rem' };
+  const btnPrimary = { background: '#7AB2D3', color: '#1f2933', border: '2px solid var(--dark)', borderRadius: '2px', padding: '0.6rem 1.2rem', cursor: 'pointer', fontWeight: 700, fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '0.4rem', boxShadow: '4px 4px 0 var(--dark)' };
   const btnDanger = { background: '#fef2f2', color: '#dc2626', border: '1px solid #fecaca', borderRadius: '6px', padding: '4px 10px', cursor: 'pointer', fontSize: '0.8rem' };
-  const tabStyle = (active) => ({ padding: '0.6rem 1.2rem', borderBottom: active ? '2px solid #2563eb' : '2px solid transparent', color: active ? '#2563eb' : '#64748b', fontWeight: active ? 700 : 500, cursor: 'pointer', background: 'none', border: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.4rem' });
+  const tabStyle = (active) => ({ padding: '0.6rem 1.2rem', borderBottom: active ? '3px solid #7AB2D3' : '3px solid transparent', color: active ? '#1f2933' : '#5f7488', fontWeight: active ? 800 : 600, cursor: 'pointer', background: 'none', border: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.4rem' });
 
   return (
     <div style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 1rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
-        <Users size={28} style={{ color: '#2563eb' }} />
+        <Users size={28} style={{ color: '#7AB2D3' }} />
         <h1 style={{ margin: 0, fontSize: '1.7rem', fontWeight: 700 }}>Event Team Management</h1>
       </div>
       <p style={{ color: '#64748b', marginBottom: '1.5rem' }}>Assign staff, speakers, and sponsors to your events.</p>

@@ -144,7 +144,7 @@ const OrganizerDashboard = () => {
 
   if (loading) return <LoadingSpinner />;
 
-  const statusColor = (s) => ({ PUBLISHED: '#10b981', ONGOING: '#0ea5e9', DRAFT: '#f59e0b', COMPLETED: '#6366f1', CANCELLED: '#ef4444' }[s] || '#94a3b8');
+  const statusColor = (s) => ({ PUBLISHED: '#7AB2D3', ONGOING: '#B9E5E8', DRAFT: '#a47742', COMPLETED: '#7AB2D3', CANCELLED: '#a6535b' }[s] || '#5f7488');
   const inputStyle = { width: '100%', boxSizing: 'border-box' };
 
   return (
@@ -163,10 +163,10 @@ const OrganizerDashboard = () => {
 
       {/* Stats */}
       <div className="grid-cols-4" style={{ marginBottom: '2rem' }}>
-        <StatCard label="Total Events" value={stats.totalEvents} icon={Calendar} color="#4f46e5" />
-        <StatCard label="Active/Published" value={stats.publishedEvents} icon={CheckCircle} color="#10b981" />
-        <StatCard label="Organizations" value={organizations.length} icon={Users} color="#0ea5e9" />
-        <StatCard label="Role" value="Organizer" icon={Layers} color="#8b5cf6" sub="Event-scoped access" />
+        <StatCard label="Total Events" value={stats.totalEvents} icon={Calendar} color="#7AB2D3" />
+        <StatCard label="Active/Published" value={stats.publishedEvents} icon={CheckCircle} color="#B9E5E8" />
+        <StatCard label="Organizations" value={organizations.length} icon={Users} color="#7AB2D3" />
+        <StatCard label="Role" value="Organizer" icon={Layers} color="#B9E5E8" sub="Event-scoped access" />
       </div>
 
       <div className="card" style={{ marginBottom: '2rem' }}>
@@ -175,7 +175,7 @@ const OrganizerDashboard = () => {
             <h2 style={{ marginBottom: '0.25rem' }}>Your Organizations</h2>
             <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Organizations you can create events for.</p>
           </div>
-          <Building2 size={24} style={{ color: '#0ea5e9' }} />
+          <Building2 size={24} style={{ color: '#7AB2D3' }} />
         </div>
         {organizations.length === 0 ? (
           <p style={{ color: '#64748b' }}>You are not assigned to an organization yet. Ask a platform admin to add you.</p>

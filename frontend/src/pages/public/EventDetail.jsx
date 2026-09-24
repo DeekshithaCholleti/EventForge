@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { eventAPI, sessionAPI, ticketTypeAPI, couponAPI, speakerAPI, sponsorAPI, staffAssignmentAPI } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import { RegistrationModal } from '../../components/RegistrationModal';
-import { LoadingSpinner } from '../../components/UI';
+import { LoadingSpinner, MagneticButton } from '../../components/UI';
 import { Calendar, MapPin, Users, Clock, ArrowLeft, Ticket, Tag, Mic2, Building2, UserCheck, Globe, Linkedin, Twitter } from 'lucide-react';
 
 // Determine registration state for display
@@ -20,7 +20,7 @@ const getRegistrationState = (event, ticketTypes) => {
     return { label: 'Event Cancelled', canRegister: false, color: '#ef4444', variant: 'danger' };
   }
   if (event.status === 'COMPLETED' || (eventEnd && now > eventEnd)) {
-    return { label: 'Event Completed', canRegister: false, color: '#6366f1', variant: 'info' };
+    return { label: 'Event Completed', canRegister: false, color: '#7AB2D3', variant: 'info' };
   }
   if (event.status === 'ONGOING' || (eventStart && now >= eventStart && eventEnd && now <= eventEnd)) {
     return { label: 'Event In Progress', canRegister: false, color: '#0ea5e9', variant: 'info' };
@@ -50,7 +50,7 @@ const getRegistrationState = (event, ticketTypes) => {
     return { label: 'Sold Out', canRegister: false, color: '#ef4444', variant: 'danger' };
   }
 
-  return { label: 'Register Now', canRegister: true, color: '#4f46e5', variant: 'primary' };
+  return { label: 'Register Now', canRegister: true, color: '#4A628A', variant: 'primary' };
 };
 
 const EventDetail = () => {
@@ -124,7 +124,7 @@ const EventDetail = () => {
       {successMsg && <div className="alert alert-success">{successMsg}</div>}
 
       {/* Hero */}
-      <div style={{ background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)', color: 'white', borderRadius: '16px', padding: '2.5rem', marginBottom: '2rem' }}>
+      <div style={{ background: 'linear-gradient(135deg, #4A628A 0%, #7AB2D3 100%)', color: 'white', borderRadius: '16px', padding: '2.5rem', marginBottom: '2rem' }}>
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
           <span style={{ background: 'rgba(255,255,255,0.15)', padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 700 }}>
             {event.status}
@@ -156,13 +156,13 @@ const EventDetail = () => {
         {/* Registration CTA in hero */}
         <div style={{ marginTop: '1.5rem' }}>
           {regState.canRegister ? (
-            <button
+            <MagneticButton
               onClick={handleRegisterClick}
               className="btn"
-              style={{ background: 'white', color: regState.waitlist ? '#f59e0b' : '#4f46e5', fontWeight: 700 }}
+              style={{ background: '#DFF2EB', color: '#1f2933', fontWeight: 700 }}
             >
               <Ticket size={18} /> {regState.label}
-            </button>
+            </MagneticButton>
           ) : (
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
@@ -177,7 +177,7 @@ const EventDetail = () => {
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '1.5rem', alignItems: 'start' }}>
         {/* Sessions */}
-        <div>
+        <div className="fade-lift">
           <h2 style={{ marginBottom: '1rem' }}>Sessions ({sessions.length})</h2>
           {sessions.length === 0 ? (
             <div className="card" style={{ textAlign: 'center', color: '#94a3b8', padding: '2rem' }}>No sessions published yet.</div>
@@ -187,7 +187,7 @@ const EventDetail = () => {
                 <div key={session._id} className="card" style={{ padding: '1.25rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem' }}>
                     <h3 style={{ fontSize: '1rem', margin: 0 }}>{session.title}</h3>
-                    <span style={{ fontSize: '0.7rem', background: '#f0f4ff', color: '#4f46e5', padding: '0.2rem 0.5rem', borderRadius: '9999px', fontWeight: 600 }}>
+                    <span style={{ fontSize: '0.7rem', background: '#DFF2EB', color: '#4A628A', padding: '0.2rem 0.5rem', borderRadius: '9999px', fontWeight: 600 }}>
                       {session.sessionType || 'Session'}
                     </span>
                   </div>
@@ -210,7 +210,7 @@ const EventDetail = () => {
         </div>
 
         {/* Sidebar */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div className="pin-panel" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div className="card">
             <h4 style={{ marginBottom: '1rem' }}><Tag size={16} style={{ verticalAlign: 'middle', marginRight: '0.35rem' }} />Ticket Types</h4>
             {ticketTypes.filter(tt => tt.status !== 'ARCHIVED').length === 0 ? (

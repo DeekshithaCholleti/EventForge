@@ -9,7 +9,7 @@ import {
 } from "lucide-react";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
-const badge = (label, color = "#64748b") => (
+const badge = (label, color = "#5f7488") => (
   <span style={{
     background: color + "15", color, border: `1px solid ${color}30`,
     borderRadius: "999px", padding: "2px 10px", fontSize: "0.72rem", fontWeight: 700
@@ -18,10 +18,10 @@ const badge = (label, color = "#64748b") => (
   </span>
 );
 
-const card = { background: "white", borderRadius: "12px", border: "1px solid #e2e8f0", padding: "1.5rem", marginBottom: "1.25rem" };
-const inputStyle = { width: "100%", padding: "0.6rem 0.9rem", borderRadius: "8px", border: "1px solid #cbd5e1", fontSize: "0.9rem", boxSizing: "border-box" };
-const btnPrimary = { background: "#7c3aed", color: "white", border: "none", borderRadius: "8px", padding: "0.55rem 1.2rem", cursor: "pointer", fontWeight: 600, fontSize: "0.88rem", display: "flex", alignItems: "center", gap: "0.4rem" };
-const btnSecondary = { background: "#f1f5f9", color: "#64748b", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "0.55rem 1.2rem", cursor: "pointer", fontWeight: 600, fontSize: "0.88rem", display: "flex", alignItems: "center", gap: "0.4rem" };
+const card = { background: "var(--cream)", borderRadius: "2px", border: "2px solid var(--dark)", padding: "1.5rem", marginBottom: "1.25rem", boxShadow: "var(--shadow)" };
+const inputStyle = { width: "100%", padding: "0.6rem 0.9rem", borderRadius: "2px", border: "2px solid var(--dark)", background: "var(--cream)", color: "var(--text-main)", fontSize: "0.9rem", boxSizing: "border-box", boxShadow: "3px 3px 0 var(--dark)" };
+const btnPrimary = { background: "var(--sky)", color: "var(--dark)", border: "2px solid var(--dark)", borderRadius: "2px", padding: "0.55rem 1.2rem", cursor: "pointer", fontWeight: 700, fontSize: "0.88rem", display: "flex", alignItems: "center", gap: "0.4rem", boxShadow: "4px 4px 0 var(--dark)" };
+const btnSecondary = { background: "var(--aqua)", color: "var(--dark)", border: "2px solid var(--dark)", borderRadius: "2px", padding: "0.55rem 1.2rem", cursor: "pointer", fontWeight: 700, fontSize: "0.88rem", display: "flex", alignItems: "center", gap: "0.4rem", boxShadow: "4px 4px 0 var(--dark)" };
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
@@ -32,11 +32,11 @@ const EventCard = ({ event }) => {
   const isLive = now >= start && now <= end;
   const isUpcoming = now < start;
   return (
-    <div style={{ ...card, marginBottom: 0, borderLeft: `4px solid ${isLive ? "#16a34a" : isUpcoming ? "#2563eb" : "#94a3b8"}` }}>
+    <div style={{ ...card, marginBottom: 0, borderLeft: `8px solid ${isLive ? "#7AB2D3" : isUpcoming ? "#B9E5E8" : "#5f7488"}` }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.5rem" }}>
         <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: 700 }}>{event.name}</h3>
         {badge(isLive ? "Live Now" : isUpcoming ? "Upcoming" : "Completed",
-          isLive ? "#16a34a" : isUpcoming ? "#2563eb" : "#94a3b8")}
+          isLive ? "#7AB2D3" : isUpcoming ? "#B9E5E8" : "#5f7488")}
       </div>
       <p style={{ color: "#64748b", fontSize: "0.85rem", margin: "0 0 0.75rem", lineHeight: 1.5 }}>
         {event.description ? event.description.slice(0, 160) + (event.description.length > 160 ? "…" : "") : "No description."}
@@ -60,7 +60,7 @@ const EventCard = ({ event }) => {
 };
 
 const SessionCard = ({ session }) => (
-  <div style={{ padding: "1rem", border: "1px solid #e2e8f0", borderRadius: "8px", marginBottom: "0.75rem" }}>
+  <div style={{ padding: "1rem", border: "2px solid var(--dark)", background: "var(--cream)", boxShadow: "3px 3px 0 var(--dark)", borderRadius: "2px", marginBottom: "0.75rem" }}>
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
       <div>
         <div style={{ fontWeight: 700, marginBottom: "0.2rem" }}>{session.title}</div>
@@ -71,7 +71,7 @@ const SessionCard = ({ session }) => (
           {new Date(session.endTime).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}
         </div>
       </div>
-      {session.sessionType && badge(session.sessionType, "#7c3aed")}
+      {session.sessionType && badge(session.sessionType, "#7AB2D3")}
     </div>
     {session.description && <p style={{ color: "#64748b", fontSize: "0.83rem", margin: "0.5rem 0 0" }}>{session.description}</p>}
   </div>
@@ -163,8 +163,8 @@ const SpeakerDashboard = () => {
   };
 
   const tabStyle = (active) => ({
-    padding: "0.65rem 1.25rem", borderBottom: `2px solid ${active ? "#7c3aed" : "transparent"}`,
-    color: active ? "#7c3aed" : "#64748b", fontWeight: active ? 700 : 500,
+    padding: "0.65rem 1.25rem", borderBottom: `3px solid ${active ? "#7AB2D3" : "transparent"}`,
+    color: active ? "#1f2933" : "#5f7488", fontWeight: active ? 800 : 600,
     cursor: "pointer", background: "none", border: "none", fontSize: "0.95rem",
     display: "flex", alignItems: "center", gap: "0.4rem",
   });
@@ -172,10 +172,10 @@ const SpeakerDashboard = () => {
   if (loading) return <div style={{ textAlign: "center", padding: "4rem" }}><LoadingSpinner /></div>;
 
   return (
-    <div style={{ maxWidth: "960px", margin: "0 auto", padding: "2rem 1rem" }}>
+    <div className="speaker-dashboard" style={{ maxWidth: "960px", margin: "0 auto", padding: "2rem 1rem" }}>
       {/* Header */}
       <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" }}>
-        <div style={{ width: 52, height: 52, borderRadius: "50%", background: "linear-gradient(135deg, #7c3aed, #a855f7)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div className="speaker-hero-icon">
           <Mic2 size={24} style={{ color: "white" }} />
         </div>
         <div>
@@ -187,12 +187,12 @@ const SpeakerDashboard = () => {
       {/* Stats Row */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "1rem", marginBottom: "1.5rem" }}>
         {[
-          { label: "Assigned Events", value: events.length, color: "#7c3aed", icon: <Calendar size={20} /> },
-          { label: "Total Sessions", value: sessions.length, color: "#2563eb", icon: <BookOpen size={20} /> },
-          { label: "Upcoming Sessions", value: sessions.filter(s => new Date(s.startTime) > new Date()).length, color: "#16a34a", icon: <Clock size={20} /> },
+          { label: "Assigned Events", value: events.length, color: "#7AB2D3", icon: <Calendar size={20} /> },
+          { label: "Total Sessions", value: sessions.length, color: "#B9E5E8", icon: <BookOpen size={20} /> },
+          { label: "Upcoming Sessions", value: sessions.filter(s => new Date(s.startTime) > new Date()).length, color: "#DFF2EB", icon: <Clock size={20} /> },
         ].map(s => (
           <div key={s.label} style={{ ...card, padding: "1rem 1.25rem", marginBottom: 0, display: "flex", alignItems: "center", gap: "1rem", borderTop: `3px solid ${s.color}` }}>
-            <div style={{ color: s.color }}>{s.icon}</div>
+            <div className="speaker-stat-icon" style={{ background: s.color, color: "var(--dark)" }}>{s.icon}</div>
             <div>
               <div style={{ fontSize: "1.8rem", fontWeight: 800, color: s.color, lineHeight: 1 }}>{s.value}</div>
               <div style={{ color: "#64748b", fontSize: "0.8rem", fontWeight: 600 }}>{s.label}</div>
@@ -205,10 +205,10 @@ const SpeakerDashboard = () => {
       {success && <div className="alert alert-success" style={{ marginBottom: "1rem" }}>{success}</div>}
 
       {/* Tabs */}
-      <div style={{ display: "flex", borderBottom: "1px solid #e2e8f0", marginBottom: "1.5rem" }}>
-        <button style={tabStyle(activeTab === "profile")} onClick={() => setActiveTab("profile")}><User size={16} /> My Profile</button>
-        <button style={tabStyle(activeTab === "events")} onClick={() => setActiveTab("events")}><Calendar size={16} /> My Events</button>
-        <button style={tabStyle(activeTab === "sessions")} onClick={() => setActiveTab("sessions")}><BookOpen size={16} /> Sessions</button>
+      <div className="speaker-tabs" style={{ display: "flex", borderBottom: "2px solid var(--dark)", marginBottom: "1.5rem" }}>
+        <button className="speaker-tab" style={tabStyle(activeTab === "profile")} onClick={() => setActiveTab("profile")}><User size={16} /> My Profile</button>
+        <button className="speaker-tab" style={tabStyle(activeTab === "events")} onClick={() => setActiveTab("events")}><Calendar size={16} /> My Events</button>
+        <button className="speaker-tab" style={tabStyle(activeTab === "sessions")} onClick={() => setActiveTab("sessions")}><BookOpen size={16} /> Sessions</button>
       </div>
 
       {/* ── PROFILE TAB ── */}
@@ -239,7 +239,7 @@ const SpeakerDashboard = () => {
                 <div style={{ marginBottom: "1.25rem" }}>
                   <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.5rem" }}>Areas of Expertise</div>
                   <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
-                    {profile.expertise.map(e => badge(e, "#7c3aed"))}
+                    {profile.expertise.map(e => badge(e, "#7AB2D3"))}
                   </div>
                 </div>
               )}
@@ -256,7 +256,7 @@ const SpeakerDashboard = () => {
                   <div style={{ fontWeight: 700, fontSize: "0.8rem", color: "#64748b", textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.5rem" }}>Presentation Materials</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
                     {profile.presentationMaterials.map((m, i) => (
-                      <a key={i} href={m} target="_blank" rel="noopener noreferrer" style={{ color: "#7c3aed", fontSize: "0.88rem", display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                      <a key={i} href={m} target="_blank" rel="noopener noreferrer" style={{ color: "#5f98b8", fontSize: "0.88rem", display: "flex", alignItems: "center", gap: "0.4rem" }}>
                         <Globe size={14} /> {m}
                       </a>
                     ))}
@@ -270,7 +270,7 @@ const SpeakerDashboard = () => {
                   <div style={{ display: "flex", gap: "0.75rem" }}>
                     {profile.socialLinks.linkedin && <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" style={{ color: "#0a66c2", display: "flex", alignItems: "center", gap: "0.3rem", fontSize: "0.88rem" }}><Linkedin size={16} /> LinkedIn</a>}
                     {profile.socialLinks.twitter && <a href={profile.socialLinks.twitter} target="_blank" rel="noopener noreferrer" style={{ color: "#1da1f2", display: "flex", alignItems: "center", gap: "0.3rem", fontSize: "0.88rem" }}><Twitter size={16} /> Twitter</a>}
-                    {profile.socialLinks.website && <a href={profile.socialLinks.website} target="_blank" rel="noopener noreferrer" style={{ color: "#7c3aed", display: "flex", alignItems: "center", gap: "0.3rem", fontSize: "0.88rem" }}><Globe size={16} /> Website</a>}
+                    {profile.socialLinks.website && <a href={profile.socialLinks.website} target="_blank" rel="noopener noreferrer" style={{ color: "#5f98b8", display: "flex", alignItems: "center", gap: "0.3rem", fontSize: "0.88rem" }}><Globe size={16} /> Website</a>}
                   </div>
                 </div>
               )}
@@ -366,7 +366,7 @@ const SpeakerDashboard = () => {
             return (
               <div key={ev._id} style={{ marginBottom: "1.5rem" }}>
                 <h3 style={{ fontSize: "1rem", fontWeight: 700, color: "#374151", marginBottom: "0.75rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                  <Calendar size={16} style={{ color: "#7c3aed" }} /> {ev.name}
+                  <Calendar size={16} style={{ color: "#7AB2D3" }} /> {ev.name}
                   <span style={{ fontWeight: 400, color: "#94a3b8", fontSize: "0.85rem" }}>({evSessions.length} session{evSessions.length !== 1 ? "s" : ""})</span>
                 </h3>
                 {evSessions.length === 0 ? (

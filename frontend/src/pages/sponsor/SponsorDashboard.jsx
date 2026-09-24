@@ -13,11 +13,11 @@ const badge = (label, color = "#64748b") => (
   </span>
 );
 
-const card = { background: "white", borderRadius: "12px", border: "1px solid #e2e8f0", padding: "1.5rem", marginBottom: "1.25rem" };
-const inputStyle = { width: "100%", padding: "0.6rem 0.9rem", borderRadius: "8px", border: "1px solid #cbd5e1", fontSize: "0.9rem", boxSizing: "border-box" };
-const btnPrimary = { background: "#db2777", color: "white", border: "none", borderRadius: "8px", padding: "0.55rem 1.2rem", cursor: "pointer", fontWeight: 600, fontSize: "0.88rem", display: "flex", alignItems: "center", gap: "0.4rem" };
-const btnSecondary = { background: "#f1f5f9", color: "#64748b", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "0.55rem 1.2rem", cursor: "pointer", fontWeight: 600, fontSize: "0.88rem", display: "flex", alignItems: "center", gap: "0.4rem" };
-const btnAction = { background: "#10b981", color: "white", border: "none", borderRadius: "6px", padding: "0.3rem 0.6rem", cursor: "pointer", fontSize: "0.75rem", fontWeight: 600, display: "flex", alignItems: "center", gap: "0.3rem" };
+const card = { background: "var(--cream)", borderRadius: "2px", border: "2px solid var(--dark)", padding: "1.5rem", marginBottom: "1.25rem", boxShadow: "var(--shadow)" };
+const inputStyle = { width: "100%", padding: "0.6rem 0.9rem", borderRadius: "2px", border: "2px solid var(--dark)", background: "var(--cream)", color: "var(--text-main)", fontSize: "0.9rem", boxSizing: "border-box", boxShadow: "3px 3px 0 var(--dark)" };
+const btnPrimary = { background: "var(--sky)", color: "var(--dark)", border: "2px solid var(--dark)", borderRadius: "2px", padding: "0.55rem 1.2rem", cursor: "pointer", fontWeight: 700, fontSize: "0.88rem", display: "flex", alignItems: "center", gap: "0.4rem", boxShadow: "4px 4px 0 var(--dark)" };
+const btnSecondary = { background: "var(--aqua)", color: "var(--dark)", border: "2px solid var(--dark)", borderRadius: "2px", padding: "0.55rem 1.2rem", cursor: "pointer", fontWeight: 700, fontSize: "0.88rem", display: "flex", alignItems: "center", gap: "0.4rem", boxShadow: "4px 4px 0 var(--dark)" };
+const btnAction = { background: "var(--sky)", color: "var(--dark)", border: "2px solid var(--dark)", borderRadius: "2px", padding: "0.3rem 0.6rem", cursor: "pointer", fontSize: "0.75rem", fontWeight: 700, display: "flex", alignItems: "center", gap: "0.3rem", boxShadow: "3px 3px 0 var(--dark)" };
 
 const SponsorDashboard = () => {
   const { user } = useAuth();
@@ -108,8 +108,8 @@ const SponsorDashboard = () => {
   };
 
   const tabStyle = (active) => ({
-    padding: "0.65rem 1.25rem", borderBottom: `2px solid ${active ? "#db2777" : "transparent"}`,
-    color: active ? "#db2777" : "#64748b", fontWeight: active ? 700 : 500,
+    padding: "0.65rem 1.25rem", borderBottom: `3px solid ${active ? "#7AB2D3" : "transparent"}`,
+    color: active ? "#1f2933" : "#5f7488", fontWeight: active ? 800 : 600,
     cursor: "pointer", background: "none", border: "none", fontSize: "0.95rem",
     display: "flex", alignItems: "center", gap: "0.4rem",
   });
@@ -119,7 +119,7 @@ const SponsorDashboard = () => {
   return (
     <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "2rem 1rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" }}>
-        <div style={{ width: 52, height: 52, borderRadius: "12px", background: "linear-gradient(135deg, #db2777, #f472b6)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div className="sponsor-hero-icon">
           <Building2 size={24} style={{ color: "white" }} />
         </div>
         <div>
@@ -146,7 +146,7 @@ const SponsorDashboard = () => {
             </div>
           ) : (
             sponsorships.map(sp => (
-              <div key={sp._id} style={{ ...card, borderTop: "4px solid #db2777" }}>
+              <div key={sp._id} style={{ ...card, borderTop: "8px solid #7AB2D3" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem" }}>
                   <div>
                     <h2 style={{ fontSize: "1.2rem", margin: "0 0 0.2rem", color: "#1e293b", display: "flex", alignItems: "center", gap: "0.4rem" }}>
@@ -220,7 +220,7 @@ const SponsorDashboard = () => {
                           <div style={{ padding: "1rem", background: "#f1f5f9", borderRadius: "8px", color: "#94a3b8", fontSize: "0.8rem", textAlign: "center", marginBottom: "0.5rem" }}>No Logo Provided</div>
                         )}
                         <div style={{ fontWeight: 700, fontSize: "1.1rem" }}>{sp.companyName}</div>
-                        {sp.website && <a href={sp.website} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.8rem", color: "#db2777", display: "flex", alignItems: "center", gap: "0.2rem" }}><LinkIcon size={12}/> Website</a>}
+                        {sp.website && <a href={sp.website} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.8rem", color: "#5f98b8", display: "flex", alignItems: "center", gap: "0.2rem" }}><LinkIcon size={12}/> Website</a>}
                       </div>
                       <div>
                         <p style={{ fontSize: "0.9rem", color: "#475569", margin: "0 0 1rem", lineHeight: 1.6 }}>{sp.description || "No description provided."}</p>
@@ -270,14 +270,14 @@ const SponsorDashboard = () => {
                     <div>
                       <h3 style={{ margin: "0 0 0.3rem", fontSize: "1.1rem" }}>{sp.event?.name}</h3>
                       <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
-                        <span style={{ fontWeight: 700, color: "#db2777", display: "flex", alignItems: "center", gap: "0.3rem" }}>
+                        <span style={{ fontWeight: 700, color: "#5f98b8", display: "flex", alignItems: "center", gap: "0.3rem" }}>
                           <Tag size={14} /> {pkg?.name || "Custom Package"}
                         </span>
                         {badge(`Payment: ${asgn.paymentStatus}`, asgn.paymentStatus === 'PAID' ? '#10b981' : '#f59e0b')}
                       </div>
                     </div>
                     <div style={{ textAlign: "right" }}>
-                      <div style={{ fontSize: "1.5rem", fontWeight: 800, color: pendingCount === 0 ? "#10b981" : "#db2777" }}>
+                      <div style={{ fontSize: "1.5rem", fontWeight: 800, color: pendingCount === 0 ? "#607f6c" : "#7AB2D3" }}>
                         {pendingCount}
                       </div>
                       <div style={{ fontSize: "0.75rem", color: "#64748b", fontWeight: 600, textTransform: "uppercase" }}>Pending Deliverables</div>

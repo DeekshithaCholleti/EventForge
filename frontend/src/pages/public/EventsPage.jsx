@@ -3,30 +3,30 @@ import { Link } from 'react-router-dom';
 import { eventAPI, ticketTypeAPI, couponAPI } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import { RegistrationModal } from '../../components/RegistrationModal';
-import { LoadingSpinner, EmptyState } from '../../components/UI';
+import { LoadingSpinner, EmptyState, MagneticButton } from '../../components/UI';
 import { Calendar, MapPin, Users, Search, Filter, Clock, Ticket } from 'lucide-react';
 
 const STATUS_COLORS = {
-  PUBLISHED: '#10b981', ONGOING: '#0ea5e9', DRAFT: '#f59e0b', COMPLETED: '#6366f1', CANCELLED: '#ef4444',
+  PUBLISHED: '#3f7d70', ONGOING: '#4A628A', DRAFT: '#a47742', COMPLETED: '#7AB2D3', CANCELLED: '#a6535b',
 };
 
 const EventCard = ({ event, onRegister }) => {
   const statusColor = STATUS_COLORS[event.status] || '#94a3b8';
   return (
-    <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+    <div className="card clip-reveal" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', '--stagger-index': event.staggerIndex }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
           <span style={{ fontSize: '0.7rem', fontWeight: 700, color: statusColor, background: statusColor + '18', padding: '0.2rem 0.6rem', borderRadius: '9999px', textTransform: 'uppercase' }}>
             {event.status}
           </span>
-          <span style={{ marginLeft: '0.5rem', fontSize: '0.7rem', color: '#94a3b8', background: '#f1f5f9', padding: '0.2rem 0.6rem', borderRadius: '9999px' }}>
+          <span style={{ marginLeft: '0.5rem', fontSize: '0.7rem', color: '#6d819b', background: '#DFF2EB', padding: '0.2rem 0.6rem', borderRadius: '9999px' }}>
             {event.eventType?.replace(/_/g, ' ')}
           </span>
         </div>
       </div>
 
       <h3 style={{ fontSize: '1.1rem', fontWeight: 700, margin: 0 }}>
-        <Link to={`/events/${event._id}`} style={{ color: '#0f172a', textDecoration: 'none' }}>{event.name}</Link>
+        <Link to={`/events/${event._id}`} className="text-shift" style={{ color: '#23364d', textDecoration: 'none' }}>{event.name}</Link>
       </h3>
 
       {event.description && (
@@ -55,9 +55,9 @@ const EventCard = ({ event, onRegister }) => {
       <div style={{ display: 'flex', gap: '0.5rem', marginTop: 'auto', paddingTop: '0.5rem', borderTop: '1px solid #f1f5f9' }}>
         <Link to={`/events/${event._id}`} className="btn btn-secondary btn-sm" style={{ flex: 1, justifyContent: 'center' }}>View Details</Link>
         {event.status === 'PUBLISHED' && (
-          <button onClick={() => onRegister(event)} className="btn btn-primary btn-sm" style={{ flex: 1 }}>
+          <MagneticButton onClick={() => onRegister(event)} className="btn btn-primary btn-sm" style={{ flex: 1 }}>
             <Ticket size={14} /> Register
-          </button>
+          </MagneticButton>
         )}
       </div>
     </div>
@@ -124,13 +124,13 @@ const EventsPage = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: '2rem' }}>
+      <div className="page-intro fade-lift">
         <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Browse Events</h1>
         <p style={{ color: '#64748b' }}>Discover conferences, workshops, seminars and more</p>
       </div>
 
       {successMsg && (
-        <div className="alert alert-success" style={{ marginBottom: '1.5rem' }}>✓ {successMsg}</div>
+        <div className="alert alert-success state-sent" style={{ marginBottom: '1.5rem' }}>✓ {successMsg}</div>
       )}
 
       {/* Filters Row */}
@@ -164,8 +164,8 @@ const EventsPage = () => {
         <EmptyState title="No events found" description="Try adjusting your search or check back later." icon={Calendar} />
       ) : (
         <div className="grid-cols-3">
-          {filtered.map((event) => (
-            <EventCard key={event._id} event={event} onRegister={handleRegisterClick} />
+          {filtered.map((event, index) => (
+            <EventCard key={event._id} event={{ ...event, staggerIndex: index }} onRegister={handleRegisterClick} />
           ))}
         </div>
       )}

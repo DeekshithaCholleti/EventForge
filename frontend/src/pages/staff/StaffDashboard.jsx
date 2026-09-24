@@ -115,18 +115,18 @@ const StaffDashboard = () => {
     } catch (err) { showFlash(err.message || 'Failed to record attendance', true); }
   };
 
-  const cardStyle = { background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1.5rem', marginBottom: '1.5rem' };
+  const cardStyle = { background: 'var(--cream)', borderRadius: '2px', border: '2px solid var(--dark)', padding: '1.5rem', marginBottom: '1.5rem', boxShadow: 'var(--shadow)' };
   const inputStyle = { padding: '0.6rem 0.9rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.9rem', width: '100%', boxSizing: 'border-box' };
   const tabStyle = (active) => ({
-    padding: '0.65rem 1.25rem', borderBottom: active ? '2px solid #0891b2' : '2px solid transparent',
-    color: active ? '#0891b2' : '#64748b', fontWeight: active ? 700 : 500, cursor: 'pointer',
+    padding: '0.65rem 1.25rem', borderBottom: active ? '3px solid #7AB2D3' : '3px solid transparent',
+    color: active ? '#1f2933' : '#5f7488', fontWeight: active ? 800 : 600, cursor: 'pointer',
     background: 'none', border: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.4rem', whiteSpace: 'nowrap'
   });
 
   return (
     <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1rem' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.25rem' }}>
-        <UserCheck size={28} style={{ color: '#0891b2' }} />
+        <UserCheck size={28} style={{ color: '#7AB2D3' }} />
         <h1 style={{ margin: 0, fontSize: '1.7rem', fontWeight: 700 }}>Staff Operations Dashboard</h1>
       </div>
       <p style={{ color: '#64748b', marginBottom: '1.5rem' }}>Manage check-ins, session attendance, venue operations, and attendee support.</p>
@@ -168,7 +168,7 @@ const StaffDashboard = () => {
                   style={{ ...inputStyle, paddingLeft: '2.5rem', fontSize: '1rem' }} />
               </div>
               <button type="submit" disabled={checkInLoading || !ticketInput.trim()}
-                style={{ background: '#0891b2', color: 'white', border: 'none', borderRadius: '8px', padding: '0 1.5rem', cursor: 'pointer', fontWeight: 700, fontSize: '0.95rem', whiteSpace: 'nowrap' }}>
+                style={{ background: '#7AB2D3', color: '#1f2933', border: '2px solid #1f2933', borderRadius: '2px', padding: '0 1.5rem', cursor: 'pointer', fontWeight: 800, fontSize: '0.95rem', whiteSpace: 'nowrap', boxShadow: '4px 4px 0 #1f2933' }}>
                 {checkInLoading ? 'Processing…' : 'Check In'}
               </button>
             </form>

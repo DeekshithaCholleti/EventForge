@@ -62,7 +62,7 @@ export const Navbar = () => {
                     </li>
                     <li>
                       <Link to="/organizer/ai-assistant" className={`nav-item ${isActive('/organizer/ai-assistant') ? 'active' : ''}`}>
-                        <Sparkles size={18} style={{ color: '#8b5cf6' }} />
+                        <Sparkles size={18} style={{ color: '#7AB2D3' }} />
                         <span>AI Assistant</span>
                       </Link>
                     </li>
@@ -72,7 +72,7 @@ export const Navbar = () => {
                 {(role === 'PLATFORM_ADMIN') && (
                   <li>
                     <Link to="/admin/dashboard" className={`nav-item ${isActive('/admin/dashboard') ? 'active' : ''}`}>
-                      <Shield size={18} style={{ color: '#7c3aed' }} />
+                      <Shield size={18} style={{ color: '#7AB2D3' }} />
                       <span>Admin Panel</span>
                     </Link>
                   </li>
@@ -81,7 +81,7 @@ export const Navbar = () => {
                 {(role === 'SPEAKER') && (
                   <li>
                     <Link to="/speaker/dashboard" className={`nav-item ${isActive('/speaker/dashboard') ? 'active' : ''}`}>
-                      <Mic2 size={18} style={{ color: '#db2777' }} />
+                      <Mic2 size={18} style={{ color: '#7AB2D3' }} />
                       <span>Speaker Dashboard</span>
                     </Link>
                   </li>
@@ -90,7 +90,7 @@ export const Navbar = () => {
                 {(role === 'SPONSOR') && (
                   <li>
                     <Link to="/sponsor/dashboard" className={`nav-item ${isActive('/sponsor/dashboard') ? 'active' : ''}`}>
-                      <Building2 size={18} style={{ color: '#10b981' }} />
+                      <Building2 size={18} style={{ color: '#7AB2D3' }} />
                       <span>Sponsor Dashboard</span>
                     </Link>
                   </li>
@@ -105,7 +105,7 @@ export const Navbar = () => {
                   </li>
                 )}
 
-                <li style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginLeft: '1rem', paddingLeft: '1rem', borderLeft: '1px solid #e2e8f0' }}>
+                <li style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginLeft: '1rem', paddingLeft: '1rem', borderLeft: '1px solid #d6e5e5' }}>
                   <div style={{ fontSize: '0.85rem', textAlign: 'right' }}>
                     <div style={{ fontWeight: 600 }}>{user.name}</div>
                     <span className={`badge badge-${role.toLowerCase()}`} style={{ fontSize: '0.65rem' }}>{role}</span>

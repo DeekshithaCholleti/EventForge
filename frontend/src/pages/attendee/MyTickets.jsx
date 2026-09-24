@@ -43,7 +43,7 @@ const MyTickets = () => {
       style={{
         padding: '0.6rem 1.25rem', borderRadius: '8px', border: 'none', cursor: 'pointer',
         fontWeight: 600, fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.4rem',
-        background: activeTab === id ? '#4f46e5' : 'transparent',
+        background: activeTab === id ? '#7AB2D3' : 'transparent',
         color: activeTab === id ? 'white' : '#64748b',
         transition: 'all 0.2s'
       }}
@@ -58,7 +58,7 @@ const MyTickets = () => {
       <p style={{ color: '#64748b', marginBottom: '1.5rem' }}>Manage your event passes and registrations</p>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '0.25rem', marginBottom: '1.5rem', background: '#f8fafc', padding: '0.35rem', borderRadius: '10px', width: 'fit-content' }}>
+      <div style={{ display: 'flex', gap: '0.25rem', marginBottom: '1.5rem', background: '#DFF2EB', border: '2px solid #1f2933', padding: '0.35rem', borderRadius: '2px', width: 'fit-content', boxShadow: '4px 4px 0 #1f2933' }}>
         <TAB id="tickets" label={`Tickets (${tickets.length})`} icon={Ticket} />
         <TAB id="registrations" label={`Registrations (${registrations.length})`} icon={BookmarkCheck} />
       </div>

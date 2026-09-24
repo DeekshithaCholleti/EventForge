@@ -1,10 +1,39 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
-export const StatCard = ({ label, value, icon: Icon, color = '#4f46e5', sub }) => (
+export const MagneticButton = ({ children, className = 'btn btn-primary', ...props }) => {
+  const buttonRef = useRef(null);
+
+  const handlePointerMove = (event) => {
+    const button = buttonRef.current;
+    if (!button || button.disabled || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const bounds = button.getBoundingClientRect();
+    const x = (event.clientX - bounds.left - bounds.width / 2) * 0.12;
+    const y = (event.clientY - bounds.top - bounds.height / 2) * 0.12;
+    button.style.transform = `translate(${x}px, ${y}px)`;
+  };
+
+  const resetPosition = () => {
+    if (buttonRef.current) buttonRef.current.style.transform = '';
+  };
+
+  return (
+    <button
+      ref={buttonRef}
+      className={`${className} magnetic`}
+      onPointerMove={handlePointerMove}
+      onPointerLeave={resetPosition}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+};
+
+export const StatCard = ({ label, value, icon: Icon, color = '#4A628A', sub }) => (
   <div className="card" style={{ padding: '1.25rem' }}>
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
       <div>
-        <p style={{ fontSize: '0.8rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.4rem' }}>{label}</p>
+        <p style={{ fontSize: '0.8rem', fontWeight: 600, color: '#6d819b', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.4rem' }}>{label}</p>
         <div style={{ fontSize: '2rem', fontWeight: 800, color: color }}>{value}</div>
         {sub && <p style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '0.25rem' }}>{sub}</p>}
       </div>
@@ -18,10 +47,10 @@ export const StatCard = ({ label, value, icon: Icon, color = '#4f46e5', sub }) =
 );
 
 export const LoadingSpinner = () => (
-  <div style={{ textAlign: 'center', padding: '3rem', color: '#64748b' }}>
+  <div style={{ textAlign: 'center', padding: '3rem', color: '#6d819b' }}>
     <div style={{
-      width: '40px', height: '40px', border: '4px solid #e2e8f0',
-      borderTopColor: '#4f46e5', borderRadius: '50%',
+      width: '40px', height: '40px', border: '4px solid #DFF2EB',
+      borderTopColor: '#4A628A', borderRadius: '50%',
       animation: 'spin 0.8s linear infinite',
       margin: '0 auto 1rem',
     }} />
@@ -31,9 +60,9 @@ export const LoadingSpinner = () => (
 );
 
 export const EmptyState = ({ title = 'Nothing here yet', description = '', icon: Icon }) => (
-  <div style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
-    {Icon && <Icon size={48} style={{ margin: '0 auto 1rem', display: 'block', color: '#cbd5e1' }} />}
-    <h3 style={{ color: '#64748b', fontWeight: 600, marginBottom: '0.5rem' }}>{title}</h3>
+  <div style={{ textAlign: 'center', padding: '3rem', color: '#6d819b' }}>
+    {Icon && <Icon size={48} style={{ margin: '0 auto 1rem', display: 'block', color: '#7AB2D3' }} />}
+    <h3 style={{ color: '#4A628A', fontWeight: 600, marginBottom: '0.5rem' }}>{title}</h3>
     {description && <p style={{ fontSize: '0.9rem' }}>{description}</p>}
   </div>
 );

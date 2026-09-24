@@ -6,9 +6,9 @@ import { Shield, Users, Building2, Settings, Search, Calendar, BarChart2, CheckC
 const ALL_ROLES = ['PLATFORM_ADMIN', 'EVENT_ORGANIZER', 'EVENT_STAFF', 'SPEAKER', 'ATTENDEE', 'SPONSOR'];
 
 const ROLE_COLORS = {
-  PLATFORM_ADMIN: '#7c3aed',
-  EVENT_ORGANIZER: '#2563eb',
-  EVENT_STAFF: '#0891b2',
+  PLATFORM_ADMIN: '#7AB2D3',
+  EVENT_ORGANIZER: '#B9E5E8',
+  EVENT_STAFF: '#7AB2D3',
   SPEAKER: '#d97706',
   ATTENDEE: '#16a34a',
   SPONSOR: '#db2777',
@@ -152,10 +152,10 @@ const AdminDashboard = () => {
     return matchSearch && matchRole;
   });
 
-  const cardStyle = { background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1.5rem', marginBottom: '1.5rem' };
+  const cardStyle = { background: 'var(--cream)', borderRadius: '2px', border: '2px solid var(--dark)', padding: '1.5rem', marginBottom: '1.5rem', boxShadow: 'var(--shadow)' };
   const inputStyle = { padding: '0.6rem 0.9rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.9rem' };
-  const tabStyle = (active) => ({ padding: '0.6rem 1.25rem', borderTop: 'none', borderRight: 'none', borderLeft: 'none', borderBottom: active ? '2px solid #7c3aed' : '2px solid transparent', color: active ? '#7c3aed' : '#64748b', fontWeight: active ? 700 : 500, cursor: 'pointer', background: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.4rem' });
-  const btnSm = { borderRadius: '6px', padding: '4px 12px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, border: '1px solid #e2e8f0' };
+  const tabStyle = (active) => ({ padding: '0.6rem 1.25rem', borderTop: 'none', borderRight: 'none', borderLeft: 'none', borderBottom: active ? '3px solid #7AB2D3' : '3px solid transparent', color: active ? '#1f2933' : '#5f7488', fontWeight: active ? 800 : 600, cursor: 'pointer', background: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.4rem' });
+  const btnSm = { borderRadius: '2px', padding: '4px 12px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 700, border: '2px solid var(--dark)', boxShadow: '3px 3px 0 var(--dark)' };
 
   // Analytics Computation
   const totalUsers = users.length || 1; 
