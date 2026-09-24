@@ -4,7 +4,10 @@ const { NotFoundError } = require('../utils/errors');
 
 const listTickets = async (req, res, next) => {
   try {
-    const tickets = await Ticket.find().populate('registration event attendee ticketType');
+    const filter = {};
+    if (req.query.attendee) filter.attendee = req.query.attendee;
+    if (req.query.event) filter.event = req.query.event;
+    const tickets = await Ticket.find(filter).populate('registration event attendee ticketType');
     return sendSuccess(res, 'Tickets fetched', { tickets }, 200);
   } catch (error) { next(error); }
 };

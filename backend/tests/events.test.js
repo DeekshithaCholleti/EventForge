@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const app = require('../src/app');
 const User = require('../src/models/User');
 const Organization = require('../src/models/Organization');
+const OrganizationMember = require('../src/models/OrganizationMember');
 const Event = require('../src/models/Event');
 const EventMember = require('../src/models/EventMember');
 const { signToken } = require('../src/services/authService');
@@ -15,6 +16,7 @@ describe('Events API', () => {
     organizer = await User.create({ name: 'Organizer', email: 'org@test.com', passwordHash, role: 'EVENT_ORGANIZER' });
     token = signToken(organizer);
     org = await Organization.create({ name: 'Test Org' });
+    await OrganizationMember.create({ organization: org._id, user: organizer._id, role: 'MEMBER', status: 'ACTIVE' });
   });
 
   it('creates an event successfully', async () => {

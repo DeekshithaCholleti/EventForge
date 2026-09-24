@@ -5,6 +5,7 @@ const User = require('../src/models/User');
 const Organization = require('../src/models/Organization');
 const Event = require('../src/models/Event');
 const EventMember = require('../src/models/EventMember');
+const OrganizationMember = require('../src/models/OrganizationMember');
 const { signToken } = require('../src/services/authService');
 
 describe('Authorization', () => {
@@ -50,6 +51,14 @@ describe('Authorization', () => {
 
     expect(res.body.success).toBe(false);
 
+    const organizerRes = await request(app)
+      .get('/api/v1/users')
+      .set('Authorization', `Bearer ${organizer1Token}`)
+      .expect(200);
+
+    expect(organizerRes.body.success).toBe(true);
+    expect(organizerRes.body.data.users.length).toBeGreaterThan(0);
+
     const adminRes = await request(app)
       .get('/api/v1/users')
       .set('Authorization', `Bearer ${adminToken}`)
@@ -77,5 +86,42 @@ describe('Authorization', () => {
 
     expect(res.body.success).toBe(true);
     expect(res.body.data.event.name).toBe('Updated Event Name');
+  });
+
+  it('prevents organizers from creating events under another organization', async () => {
+    const otherOrg = await Organization.create({ name: 'Other Org' });
+    const res = await request(app)
+      .post('/api/v1/events')
+      .set('Authorization', `Bearer ${organizer1Token}`)
+      .send({
+        organization: otherOrg._id,
+        name: 'Unauthorized Event',
+        startDate: new Date(Date.now() + 86400000).toISOString(),
+        endDate: new Date(Date.now() + 2 * 86400000).toISOString(),
+        registrationStart: new Date(Date.now() - 86400000).toISOString(),
+        registrationEnd: new Date(Date.now() + 86400000).toISOString(),
+      })
+      .expect(403);
+
+    expect(res.body.success).toBe(false);
+    expect(await Event.findOne({ name: 'Unauthorized Event' })).toBeNull();
+  });
+
+  it('allows an assigned organizer to create an organization event', async () => {
+    await OrganizationMember.create({ organization: org._id, user: organizer1._id, status: 'ACTIVE' });
+    const res = await request(app)
+      .post('/api/v1/events')
+      .set('Authorization', `Bearer ${organizer1Token}`)
+      .send({
+        organization: org._id,
+        name: 'Assigned Organizer Event',
+        startDate: new Date(Date.now() + 86400000).toISOString(),
+        endDate: new Date(Date.now() + 2 * 86400000).toISOString(),
+        registrationStart: new Date(Date.now() - 86400000).toISOString(),
+        registrationEnd: new Date(Date.now() + 86400000).toISOString(),
+      })
+      .expect(201);
+
+    expect(res.body.data.event.organization).toBe(String(org._id));
   });
 });

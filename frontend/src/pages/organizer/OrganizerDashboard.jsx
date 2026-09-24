@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { eventAPI, analyticsAPI } from '../../api';
+import { eventAPI, analyticsAPI, organizationAPI } from '../../api';
 import { StatCard, LoadingSpinner, EmptyState } from '../../components/UI';
-import { Calendar, Users, CheckCircle, BarChart2, PlusCircle, Layers, Edit, XCircle } from 'lucide-react';
+import { Calendar, Users, CheckCircle, BarChart2, PlusCircle, Layers, Edit, XCircle, Building2 } from 'lucide-react';
 
 const OrganizerDashboard = () => {
   const { user } = useAuth();
@@ -13,7 +13,7 @@ const OrganizerDashboard = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
-  const [newEvent, setNewEvent] = useState({ name: '', description: '', eventType: 'CONFERENCE', startDate: '', endDate: '', registrationStart: '', registrationEnd: '', capacity: 100 });
+  const [newEvent, setNewEvent] = useState({ name: '', description: '', eventType: 'CONFERENCE', organization: '', startDate: '', endDate: '', registrationStart: '', registrationEnd: '', capacity: 100 });
   const [organizations, setOrganizations] = useState([]);
   const [createError, setCreateError] = useState('');
   const [editError, setEditError] = useState('');
@@ -26,16 +26,17 @@ const OrganizerDashboard = () => {
   const fetchDashboard = async () => {
     setLoading(true);
     try {
-      const evRes = await eventAPI.getAll({ limit: 50, myEvents: true, includePast: true });
+      const [evRes, orgRes] = await Promise.all([
+        eventAPI.getAll({ limit: 50, myEvents: true, includePast: true }),
+        organizationAPI.getAll(),
+      ]);
       const allEvents = evRes.data?.events || [];
       setEvents(allEvents);
       setStats({
         totalEvents: allEvents.length,
         publishedEvents: allEvents.filter(e => e.status === 'PUBLISHED' || e.status === 'ONGOING').length,
       });
-      const orgSet = {};
-      allEvents.forEach(ev => { if (ev.organization) orgSet[ev.organization._id] = ev.organization; });
-      setOrganizations(Object.values(orgSet));
+      setOrganizations(orgRes.data?.organizations || []);
     } catch (err) {
       console.error(err);
     } finally {
@@ -60,12 +61,10 @@ const OrganizerDashboard = () => {
     setCreateError('');
     setCreateLoading(true);
     try {
-      const orgId = organizations[0]?._id;
-      if (!orgId) { setCreateError('Please create an organization first via the Admin panel.'); setCreateLoading(false); return; }
+      if (!newEvent.organization) { setCreateError('Please select an organization for this event.'); setCreateLoading(false); return; }
       
       const payload = {
         ...newEvent,
-        organization: orgId,
         startDate: getIsoString(newEvent.startDate),
         endDate: getIsoString(newEvent.endDate),
         registrationStart: getIsoString(newEvent.registrationStart),
@@ -74,7 +73,7 @@ const OrganizerDashboard = () => {
 
       await eventAPI.create(payload);
       setShowCreateModal(false);
-      setNewEvent({ name: '', description: '', eventType: 'CONFERENCE', startDate: '', endDate: '', registrationStart: '', registrationEnd: '', capacity: 100 });
+      setNewEvent({ name: '', description: '', eventType: 'CONFERENCE', organization: '', startDate: '', endDate: '', registrationStart: '', registrationEnd: '', capacity: 100 });
       fetchDashboard();
     } catch (err) {
       setCreateError(typeof err === 'string' ? err : (err.message || 'Failed to create event. Check all fields.'));
@@ -170,6 +169,28 @@ const OrganizerDashboard = () => {
         <StatCard label="Role" value="Organizer" icon={Layers} color="#8b5cf6" sub="Event-scoped access" />
       </div>
 
+      <div className="card" style={{ marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+          <div>
+            <h2 style={{ marginBottom: '0.25rem' }}>Your Organizations</h2>
+            <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Organizations you can create events for.</p>
+          </div>
+          <Building2 size={24} style={{ color: '#0ea5e9' }} />
+        </div>
+        {organizations.length === 0 ? (
+          <p style={{ color: '#64748b' }}>You are not assigned to an organization yet. Ask a platform admin to add you.</p>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.75rem' }}>
+            {organizations.map(organization => (
+              <div key={organization._id} style={{ border: '1px solid #e2e8f0', borderRadius: '8px', padding: '0.9rem 1rem', background: '#f8fafc' }}>
+                <div style={{ fontWeight: 700, color: '#1e293b' }}>{organization.name}</div>
+                {organization.description && <div style={{ color: '#64748b', fontSize: '0.82rem', marginTop: '0.25rem' }}>{organization.description}</div>}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Quick Links */}
       <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
         {[
@@ -255,6 +276,14 @@ const OrganizerDashboard = () => {
               </div>
             )}
             <form onSubmit={handleCreateEvent}>
+              <div className="form-group">
+                <label>Organization *</label>
+                <select className="form-control" value={newEvent.organization} onChange={e => setNewEvent({ ...newEvent, organization: e.target.value })} required>
+                  <option value="">Select an organization</option>
+                  {organizations.map(organization => <option key={organization._id} value={organization._id}>{organization.name}</option>)}
+                </select>
+                {organizations.length === 0 && <small style={{ color: '#dc2626' }}>You must belong to an organization before creating an event.</small>}
+              </div>
               <div className="form-group">
                 <label>Event Name *</label>
                 <input className="form-control" style={inputStyle} value={newEvent.name} onChange={e => setNewEvent({ ...newEvent, name: e.target.value })} placeholder="e.g. AI Summit 2026" required />

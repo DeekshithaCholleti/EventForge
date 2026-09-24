@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { userAPI, organizationAPI, eventAPI, feedbackAPI } from '../../api';
 import { LoadingSpinner } from '../../components/UI';
-import { Shield, Users, Building2, Settings, Search, Calendar, BarChart2, CheckCircle2, AlertCircle, RefreshCw, MapPin, Tag } from 'lucide-react';
+import { Shield, Users, Building2, Settings, Search, Calendar, BarChart2, CheckCircle2, AlertCircle, RefreshCw, Tag } from 'lucide-react';
 
 const ALL_ROLES = ['PLATFORM_ADMIN', 'EVENT_ORGANIZER', 'EVENT_STAFF', 'SPEAKER', 'ATTENDEE', 'SPONSOR'];
 
@@ -36,6 +36,9 @@ const AdminDashboard = () => {
   const [editingRole, setEditingRole] = useState({}); // { [userId]: newRole }
   const [editingOrg, setEditingOrg] = useState(null);
   const [orgForm, setOrgForm] = useState({ name: '', description: '' });
+  const [newOrg, setNewOrg] = useState({ name: '', description: '' });
+  const [orgMemberUsers, setOrgMemberUsers] = useState({});
+  const [selectedOrganizer, setSelectedOrganizer] = useState({});
   const [eventSearch, setEventSearch] = useState('');
   const [eventStatusFilter, setEventStatusFilter] = useState('');
 
@@ -115,6 +118,34 @@ const AdminDashboard = () => {
     } catch (e) { flash(e.message || 'Failed to update org', true); }
   };
 
+  const handleCreateOrg = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await organizationAPI.create(newOrg);
+      setOrgs(prev => [res.data.organization, ...prev]);
+      setNewOrg({ name: '', description: '' });
+      flash('Organization created');
+    } catch (e) { flash(e.message || 'Failed to create organization', true); }
+  };
+
+  const loadOrgMembers = async (organizationId) => {
+    try {
+      const res = await organizationAPI.getMembers(organizationId);
+      setOrgMemberUsers(prev => ({ ...prev, [organizationId]: res.data?.members || [] }));
+    } catch (e) { flash(e.message || 'Failed to load organization members', true); }
+  };
+
+  const handleAddOrganizer = async (organizationId) => {
+    const userId = selectedOrganizer[organizationId];
+    if (!userId) return;
+    try {
+      await organizationAPI.addMember(organizationId, { user: userId });
+      setSelectedOrganizer(prev => ({ ...prev, [organizationId]: '' }));
+      await loadOrgMembers(organizationId);
+      flash('Organizer added to organization');
+    } catch (e) { flash(e.message || 'Failed to add organizer', true); }
+  };
+
   const filteredUsers = users.filter(u => {
     const matchSearch = !search || u.name?.toLowerCase().includes(search.toLowerCase()) || u.email?.toLowerCase().includes(search.toLowerCase());
     const matchRole = !roleFilter || u.role === roleFilter;
@@ -123,7 +154,7 @@ const AdminDashboard = () => {
 
   const cardStyle = { background: 'white', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '1.5rem', marginBottom: '1.5rem' };
   const inputStyle = { padding: '0.6rem 0.9rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '0.9rem' };
-  const tabStyle = (active) => ({ padding: '0.6rem 1.25rem', borderBottom: active ? '2px solid #7c3aed' : '2px solid transparent', color: active ? '#7c3aed' : '#64748b', fontWeight: active ? 700 : 500, cursor: 'pointer', background: 'none', border: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.4rem' });
+  const tabStyle = (active) => ({ padding: '0.6rem 1.25rem', borderTop: 'none', borderRight: 'none', borderLeft: 'none', borderBottom: active ? '2px solid #7c3aed' : '2px solid transparent', color: active ? '#7c3aed' : '#64748b', fontWeight: active ? 700 : 500, cursor: 'pointer', background: 'none', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.4rem' });
   const btnSm = { borderRadius: '6px', padding: '4px 12px', cursor: 'pointer', fontSize: '0.8rem', fontWeight: 600, border: '1px solid #e2e8f0' };
 
   // Analytics Computation
@@ -281,7 +312,7 @@ const AdminDashboard = () => {
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.86rem' }}>
                   <thead>
                     <tr style={{ borderBottom: '2px solid #f1f5f9', background: '#f8fafc' }}>
-                      {['Event Name', 'Type', 'Organization', 'Location', 'Rating', 'Status', 'Dates', 'Capacity'].map(h => (
+                      {['Event Name', 'Type', 'Organization', 'Rating', 'Status', 'Dates', 'Capacity'].map(h => (
                         <th key={h} style={{ textAlign: 'left', padding: '0.55rem 0.75rem', color: '#64748b', fontWeight: 700, whiteSpace: 'nowrap' }}>{h}</th>
                       ))}
                     </tr>
@@ -305,14 +336,6 @@ const AdminDashboard = () => {
                             </span>
                           </td>
                           <td style={{ padding: '0.65rem 0.75rem', color: '#64748b' }}>{e.organization?.name || '—'}</td>
-                          <td style={{ padding: '0.65rem 0.75rem', color: '#64748b', whiteSpace: 'nowrap' }}>
-                            {e.location?.city ? (
-                              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                                <MapPin size={12} style={{ color: '#94a3b8' }} />
-                                {e.location.city}{e.location.country ? `, ${e.location.country}` : ''}
-                              </span>
-                            ) : '—'}
-                          </td>
                           <td style={{ padding: '0.65rem 0.75rem', fontWeight: 600, color: avgRating ? '#f59e0b' : '#cbd5e1' }}>
                             {avgRating ? `${avgRating} ⭐` : '—'}
                           </td>
@@ -330,7 +353,7 @@ const AdminDashboard = () => {
                     })}
                     {filtered.length === 0 && (
                       <tr>
-                        <td colSpan={8} style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
+                        <td colSpan={7} style={{ textAlign: 'center', padding: '3rem', color: '#94a3b8' }}>
                           {events.length === 0 ? 'No events found on the platform.' : 'No events match your search.'}
                         </td>
                       </tr>
@@ -343,6 +366,61 @@ const AdminDashboard = () => {
         </div>
       )}
 
+      {/* ── USERS TAB ── */}
+      {activeTab === 'users' && (
+        <div style={cardStyle}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+            <div>
+              <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#1e293b' }}>Users</h3>
+              <p style={{ margin: '0.2rem 0 0', fontSize: '0.82rem', color: '#94a3b8' }}>{filteredUsers.length} of {users.length} users</p>
+            </div>
+            <button onClick={fetchUsers} disabled={usersLoading} style={{ ...btnSm, background: '#f8fafc', color: '#475569', padding: '6px 14px' }}>
+              <RefreshCw size={14} style={{ animation: usersLoading ? 'spin 1s linear infinite' : 'none' }} /> Refresh
+            </button>
+          </div>
+          <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+            <div style={{ position: 'relative', flex: '1 1 240px' }}>
+              <Search size={15} style={{ position: 'absolute', left: '0.65rem', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+              <input style={{ ...inputStyle, paddingLeft: '2.1rem', width: '100%', boxSizing: 'border-box' }} placeholder="Search by name or email" value={search} onChange={e => setSearch(e.target.value)} />
+            </div>
+            <select style={{ ...inputStyle, minWidth: '180px' }} value={roleFilter} onChange={e => setRoleFilter(e.target.value)}>
+              <option value="">All roles</option>
+              {ALL_ROLES.map(role => <option key={role} value={role}>{role.replace(/_/g, ' ')}</option>)}
+            </select>
+          </div>
+          {usersLoading ? <div style={{ textAlign: 'center', padding: '2rem' }}><LoadingSpinner /></div> : (
+            <div style={{ overflowX: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.86rem' }}>
+                <thead><tr style={{ borderBottom: '2px solid #f1f5f9', background: '#f8fafc' }}>
+                  {['Name', 'Email', 'Role', 'Status', 'Actions'].map(header => <th key={header} style={{ textAlign: 'left', padding: '0.55rem 0.75rem', color: '#64748b', fontWeight: 700 }}>{header}</th>)}
+                </tr></thead>
+                <tbody>
+                  {filteredUsers.map(userItem => (
+                    <tr key={userItem._id} style={{ borderBottom: '1px solid #f1f5f9' }}>
+                      <td style={{ padding: '0.65rem 0.75rem', fontWeight: 600, color: '#1e293b' }}>{userItem.name}</td>
+                      <td style={{ padding: '0.65rem 0.75rem', color: '#64748b' }}>{userItem.email}</td>
+                      <td style={{ padding: '0.65rem 0.75rem' }}>
+                        <select value={editingRole[userItem._id] || userItem.role} onChange={e => setEditingRole(prev => ({ ...prev, [userItem._id]: e.target.value }))} style={{ ...inputStyle, padding: '4px 6px' }}>
+                          {ALL_ROLES.map(role => <option key={role} value={role}>{role.replace(/_/g, ' ')}</option>)}
+                        </select>
+                      </td>
+                      <td style={{ padding: '0.65rem 0.75rem' }}><Badge label={userItem.isActive ? 'Active' : 'Inactive'} color={userItem.isActive ? '#16a34a' : '#dc2626'} /></td>
+                      <td style={{ padding: '0.65rem 0.75rem' }}>
+                        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+                          {editingRole[userItem._id] && editingRole[userItem._id] !== userItem.role && <button onClick={() => handleRoleChange(userItem._id, editingRole[userItem._id])} style={{ ...btnSm, color: '#2563eb', background: '#eff6ff', borderColor: '#bfdbfe' }}>Save role</button>}
+                          <button onClick={() => handleStatusToggle(userItem._id, userItem.isActive)} style={{ ...btnSm, color: userItem.isActive ? '#dc2626' : '#16a34a', background: 'white' }}>{userItem.isActive ? 'Deactivate' : 'Activate'}</button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                  {filteredUsers.length === 0 && <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>No users match your filters.</td></tr>}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
 
       {/* ── ORGANIZATIONS TAB ── */}
       {activeTab === 'organizations' && (
@@ -350,12 +428,17 @@ const AdminDashboard = () => {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
             <h3 style={{ margin: 0, fontSize: '1.25rem', color: '#1e293b' }}>Organizations</h3>
           </div>
+          <form onSubmit={handleCreateOrg} style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1.25rem', padding: '1rem', background: '#f8fafc', borderRadius: '8px' }}>
+            <input required placeholder="Organization name" value={newOrg.name} onChange={e => setNewOrg({ ...newOrg, name: e.target.value })} style={{ ...inputStyle, flex: '1 1 220px' }} />
+            <input placeholder="Description" value={newOrg.description} onChange={e => setNewOrg({ ...newOrg, description: e.target.value })} style={{ ...inputStyle, flex: '2 1 280px' }} />
+            <button type="submit" style={{ ...btnSm, background: '#2563eb', color: 'white', borderColor: '#2563eb' }}>Create organization</button>
+          </form>
           {orgsLoading ? <div style={{ textAlign: 'center', padding: '2rem' }}><LoadingSpinner /></div> : (
             <>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.88rem' }}>
                 <thead>
                   <tr style={{ borderBottom: '2px solid #f1f5f9' }}>
-                    {['Organization', 'Description', 'Status', 'Created', ''].map(h => (
+                    {['Organization', 'Description', 'Status', 'Created', 'Organizers', ''].map(h => (
                       <th key={h} style={{ textAlign: 'left', padding: '0.5rem 0.75rem', color: '#64748b', fontWeight: 700 }}>{h}</th>
                     ))}
                   </tr>
@@ -367,12 +450,23 @@ const AdminDashboard = () => {
                       <td style={{ padding: '0.65rem 0.75rem', color: '#64748b', maxWidth: '280px' }}><span style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{o.description || '—'}</span></td>
                       <td style={{ padding: '0.65rem 0.75rem' }}><Badge label={o.isActive ? 'Active' : 'Inactive'} color={o.isActive ? '#16a34a' : '#dc2626'} /></td>
                       <td style={{ padding: '0.65rem 0.75rem', color: '#94a3b8', whiteSpace: 'nowrap' }}>{new Date(o.createdAt).toLocaleDateString('en-IN')}</td>
+                      <td style={{ padding: '0.65rem 0.75rem', minWidth: '250px' }}>
+                        <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.4rem' }}>
+                          <select value={selectedOrganizer[o._id] || ''} onChange={e => setSelectedOrganizer(prev => ({ ...prev, [o._id]: e.target.value }))} style={{ ...inputStyle, padding: '4px', minWidth: '150px' }}>
+                            <option value="">Add organizer...</option>
+                            {users.filter(u => u.role === 'EVENT_ORGANIZER' && u.isActive && !(orgMemberUsers[o._id] || []).some(m => m.user?._id === u._id)).map(u => <option key={u._id} value={u._id}>{u.name} ({u.email})</option>)}
+                          </select>
+                          <button type="button" onClick={() => handleAddOrganizer(o._id)} style={{ ...btnSm, background: '#eff6ff', color: '#2563eb', borderColor: '#bfdbfe' }}>Add</button>
+                        </div>
+                        <button type="button" onClick={() => loadOrgMembers(o._id)} style={{ ...btnSm, background: 'white', color: '#475569' }}>View assigned organizers</button>
+                        {(orgMemberUsers[o._id] || []).map(member => <div key={member._id} style={{ color: '#64748b', fontSize: '0.78rem', marginTop: '0.25rem' }}>{member.user?.name} ({member.user?.email})</div>)}
+                      </td>
                       <td style={{ padding: '0.65rem 0.75rem' }}>
                         <button onClick={() => { setEditingOrg(o); setOrgForm({ name: o.name, description: o.description || '' }); }} style={{ ...btnSm, background: '#eff6ff', color: '#2563eb', borderColor: '#bfdbfe' }}>Edit</button>
                       </td>
                     </tr>
                   ))}
-                  {orgs.length === 0 && <tr><td colSpan={5} style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>No organizations found.</td></tr>}
+                  {orgs.length === 0 && <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>No organizations found.</td></tr>}
                 </tbody>
               </table>
             </>

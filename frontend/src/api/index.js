@@ -150,5 +150,7 @@ export const organizationAPI = {
   getById: (id) => api.get(`/organizations/${id}`),
   create: (data) => api.post('/organizations', data),
   update: (id, data) => api.patch(`/organizations/${id}`, data),
+  getMembers: (id) => api.get(`/organizations/${id}/members`),
+  addMember: (id, data) => api.post(`/organizations/${id}/members`, data),
 };
 

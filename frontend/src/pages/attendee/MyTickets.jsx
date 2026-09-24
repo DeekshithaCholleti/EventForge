@@ -24,7 +24,7 @@ const MyTickets = () => {
           ticketAPI.getAll({ attendee: user._id }),
           registrationAPI.getAll({ attendee: user._id }),
         ]);
-        setTickets(tRes.data?.items || []);
+        setTickets(tRes.data?.tickets || []);
         setRegistrations(rRes.data?.items || []);
       } catch (err) {
         console.error(err);
@@ -76,6 +76,9 @@ const MyTickets = () => {
                   event={ticket.event}
                   ticketType={ticket.ticketType}
                 />
+                <div style={{ marginTop: '0.5rem', textAlign: 'center', color: '#475569', fontSize: '0.82rem' }}>
+                  Ticket ID: <strong style={{ fontFamily: 'monospace', color: '#1e293b' }}>{ticket.uniqueTicketCode}</strong>
+                </div>
                 {ticket.event && (
                   <button
                     onClick={() => {
@@ -105,6 +108,7 @@ const MyTickets = () => {
               <thead>
                 <tr>
                   <th>Event</th>
+                  <th>Ticket ID</th>
                   <th>Ticket Type</th>
                   <th>Status</th>
                   <th>Amount Paid</th>
@@ -113,13 +117,23 @@ const MyTickets = () => {
               </thead>
               <tbody>
                 {registrations.map((reg) => (
+                  (() => {
+                    const registrationId = typeof reg._id === 'object' ? reg._id.toString() : reg._id;
+                    const registrationTicket = tickets.find(ticket => {
+                      const ticketRegistrationId = typeof ticket.registration === 'object' ? ticket.registration?._id : ticket.registration;
+                      return String(ticketRegistrationId) === String(registrationId);
+                    });
+                    return (
                   <tr key={reg._id}>
                     <td style={{ fontWeight: 600 }}>{reg.event?.name || '—'}</td>
+                    <td style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#334155' }}>{registrationTicket?.uniqueTicketCode || '—'}</td>
                     <td>{reg.ticketType?.name || '—'}</td>
                     <td><span className={`badge badge-${reg.registrationStatus?.toLowerCase()}`}>{reg.registrationStatus}</span></td>
                     <td>${reg.finalAmount}</td>
                     <td style={{ color: '#64748b', fontSize: '0.85rem' }}>{new Date(reg.createdAt).toLocaleDateString()}</td>
                   </tr>
+                    );
+                  })()
                 ))}
               </tbody>
             </table>

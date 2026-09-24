@@ -1,5 +1,6 @@
 const Event = require('../models/Event');
 const EventMember = require('../models/EventMember');
+const OrganizationMember = require('../models/OrganizationMember');
 const { sendSuccess } = require('../utils/response');
 const { NotFoundError, ForbiddenError, BadRequestError } = require('../utils/errors');
 
@@ -45,6 +46,14 @@ const listEvents = async (req, res, next) => {
 
 const createEvent = async (req, res, next) => {
   try {
+    if (req.user.role !== 'PLATFORM_ADMIN') {
+      const organizationMembership = await OrganizationMember.findOne({
+        organization: req.body.organization,
+        user: req.user._id,
+        status: 'ACTIVE',
+      });
+      if (!organizationMembership) throw new ForbiddenError('You must belong to this organization to create an event');
+    }
     const event = await Event.create({
       ...req.body,
       createdBy: req.user._id,

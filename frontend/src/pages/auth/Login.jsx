@@ -19,7 +19,7 @@ const Login = () => {
       const user = await login(formData.email, formData.password);
       // Navigate based on role
       const roleRoutes = {
-        PLATFORM_ADMIN: '/organizer/dashboard',
+        PLATFORM_ADMIN: '/admin/dashboard',
         EVENT_ORGANIZER: '/organizer/dashboard',
         EVENT_STAFF: '/staff/checkin',
         ATTENDEE: '/events',

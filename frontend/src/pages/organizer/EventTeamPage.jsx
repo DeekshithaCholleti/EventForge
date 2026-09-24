@@ -278,7 +278,7 @@ const EventTeamPage = () => {
                     <label style={{ fontWeight: 600, fontSize: '0.85rem', display: 'block', marginBottom: '4px' }}>User</label>
                     <select value={staffForm.staff} onChange={e => setStaffForm(p => ({ ...p, staff: e.target.value }))} style={inputStyle} required>
                       <option value="">— Select user —</option>
-                      {allUsers.filter(u => u.role === 'EVENT_STAFF' || u.role === 'ATTENDEE').map(u => <option key={u._id} value={u._id}>{u.name} ({u.email})</option>)}
+                      {allUsers.filter(u => u.role === 'EVENT_STAFF').map(u => <option key={u._id} value={u._id}>{u.name} ({u.email})</option>)}
                     </select>
                   </div>
                   <div>
@@ -322,7 +322,7 @@ const EventTeamPage = () => {
                     <label style={{ fontWeight: 600, fontSize: '0.85rem', display: 'block', marginBottom: '4px' }}>User Account</label>
                     <select value={speakerForm.user} onChange={e => setSpeakerForm(p => ({ ...p, user: e.target.value }))} style={inputStyle} required>
                       <option value="">— Select user —</option>
-                      {allUsers.map(u => <option key={u._id} value={u._id}>{u.name} ({u.email}) [{u.role}]</option>)}
+                      {allUsers.filter(u => u.role === 'SPEAKER').map(u => <option key={u._id} value={u._id}>{u.name} ({u.email})</option>)}
                     </select>
                   </div>
                   <div>

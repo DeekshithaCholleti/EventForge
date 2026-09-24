@@ -5,8 +5,8 @@ const { listUsers, getUserById, updateUserRole, updateUserStatus } = require('..
 const router = express.Router();
 
 router.use(verifyToken);
-router.get('/', listUsers);
-router.get('/:id', getUserById);
+router.get('/', authorizeRole('PLATFORM_ADMIN', 'EVENT_ORGANIZER'), listUsers);
+router.get('/:id', authorizeRole('PLATFORM_ADMIN'), getUserById);
 router.patch('/:id/role', authorizeRole('PLATFORM_ADMIN'), updateUserRole);
 router.patch('/:id/status', authorizeRole('PLATFORM_ADMIN'), updateUserStatus);
 
