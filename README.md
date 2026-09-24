@@ -84,3 +84,4 @@ npm run dev
 - **Backend:** Node.js, Express, Mongoose, JWT, bcryptjs, Helmet, express-validator
 - **Database:** MongoDB (Atlas in production)
 - **Deployment:** Vercel (frontend) + Render (backend)
+- **Deployment link:https://event-forge-3yuu.vercel.app/events
